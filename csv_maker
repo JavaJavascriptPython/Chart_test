@@ -1,0 +1,67 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Text::CSV;
+use Excel::Writer::XLSX;
+
+# Define the CSV file name
+my $csv_file = 'data.csv';
+
+# Define a hash to store data
+my %data;
+
+# Create a new CSV object
+my $csv = Text::CSV->new({ binary => 1, eol => $/ });
+
+# Open the CSV file for writing
+open my $fh, '>', $csv_file or die "Could not open '$csv_file' $!\n";
+
+# Define column headers
+my @headers = ('Key', 'Value');
+
+# Write headers to the CSV file
+$csv->print($fh, \@headers);
+
+# Simulate a loop where the hash gets updated
+for my $i (1..5) {
+    # Update hash with some data
+    $data{"key_$i"} = "value_$i";
+    
+    # Append updated hash to the CSV file
+    while (my ($key, $value) = each %data) {
+        $csv->print($fh, [$key, $value]);
+    }
+    
+    # Reset the hash for next iteration (optional)
+    %data = ();
+}
+
+# Close the CSV file
+close $fh;
+
+# Convert the CSV file to an Excel file
+my $excel_file = 'data.xlsx';
+my $workbook = Excel::Writer::XLSX->new($excel_file);
+my $worksheet = $workbook->add_worksheet();
+
+# Open the CSV file for reading
+open $fh, '<', $csv_file or die "Could not open '$csv_file' $!\n";
+
+# Read the CSV file and write to the Excel file
+my $row = 0;
+while (my $line = <$fh>) {
+    chomp $line;
+    my @fields = split /,/, $line;
+    my $col = 0;
+    for my $field (@fields) {
+        $worksheet->write($row, $col, $field);
+        $col++;
+    }
+    $row++;
+}
+
+# Close the file handles
+close $fh;
+$workbook->close();
+
+print "CSV file '$csv_file' has been converted to Excel file '$excel_file'.\n";
