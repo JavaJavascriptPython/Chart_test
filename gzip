@@ -1,0 +1,37 @@
+
+
+#cpan install File::Find
+#cpan install IO::Compress::Gzip
+
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Find;
+use IO::Compress::Gzip qw(gzip $GzipError);
+
+# Specify the directory to start from
+my $start_dir = 'your_directory_here';
+
+# Find all files in the directory and its subdirectories
+find(\&process_file, $start_dir);
+
+sub process_file {
+    # Skip directories
+    return if -d;
+
+    # Get the file name
+    my $file = $_;
+
+    # Skip already compressed files
+    return if $file =~ /\.gz$/;
+
+    # Compress the file
+    my $gz_file = "$file.gz";
+    if (gzip $file => $gz_file) {
+        print "Successfully compressed '$file' to '$gz_file'\n";
+        # Optionally, delete the original file after compression
+        unlink $file or warn "Could not unlink '$file': $!";
+    } else {
+        warn "gzip failed: $GzipError\n";
+    }
+}
