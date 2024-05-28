@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# Open the input file for reading
+my $input_file = 'file_paths.txt'; # replace with your actual file name
+open(my $fh, '<', $input_file) or die "Cannot open file $input_file: $!";
+
+while (my $line = <$fh>) {
+    chomp $line;  # Remove the newline character at the end of the line
+    my ($path, $filename) = $line =~ m|^(.*/)?([^/]*)$|;
+    print "Path: ", ($path // ''), " Filename: $filename\n";
+}
+
+close($fh);
