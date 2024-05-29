@@ -1,0 +1,34 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# Original hash
+my %hash = (
+    key1 => 'value1',
+    key2 => 'value2',
+    key3 => 'value3',
+);
+
+# Open a file to write the CSV content initially (create the file)
+my $filename = 'output.csv';
+open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
+
+# Write the header
+print $fh "Key,Value\n";
+
+# Close the file handle
+close $fh;
+
+# Append to the CSV file in a loop
+foreach my $key (keys %hash) {
+    # Open the file in append mode
+    open($fh, '>>', $filename) or die "Could not open file '$filename' $!";
+
+    # Write the key-value pair
+    print $fh "$key,$hash{$key}\n";
+
+    # Close the file handle
+    close $fh;
+}
+
+print "CSV file 'output.csv' created and appended successfully.\n";
