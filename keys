@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# Original hash
+my %original_hash = (
+    key1 => 'value1',
+    key2 => 'value2',
+    key3 => 'value3',
+);
+
+# Collect all keys from the original hash
+my @keys = keys %original_hash;
+my $keys_string = join(',', @keys);
+
+# New hash
+my %new_hash;
+
+# Add each key from the original hash to the new hash with the keys string as value
+foreach my $key (@keys) {
+    $new_hash{$key} = $keys_string;
+}
+
+# Print the new hash to verify
+foreach my $key (keys %new_hash) {
+    print "$key => $new_hash{$key}\n";
+}
