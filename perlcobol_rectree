@@ -1,0 +1,49 @@
+use strict;
+use warnings;
+use Text::CSV;
+
+# Define the tree structure
+my %tree = (
+    'A' => ['B', 'C'],
+    'B' => ['D', 'E'],
+    'C' => ['F'],
+    'D' => [],
+    'E' => ['G'],
+    'F' => [],
+    'G' => [],
+);
+
+# Function to traverse the tree and record paths
+sub traverse_tree {
+    my ($node, $path, $paths) = @_;
+    push @$path, $node;
+    if (!@{$tree{$node}}) {
+        push @$paths, join(' -> ', @$path);
+    } else {
+        foreach my $child (@{$tree{$node}}) {
+            traverse_tree($child, [@$path], $paths);
+        }
+    }
+}
+
+# Record all paths starting from the root
+my @all_paths;
+traverse_tree('A', [], \@all_paths);
+
+# Write the paths to a CSV file
+my $csv_filename = 'tree_traversal_paths.csv';
+my $csv = Text::CSV->new({ binary => 1, eol => $/ });
+
+open my $csv_fh, '>', $csv_filename or die "Could not open '$csv_filename' $!\n";
+$csv->print($csv_fh, ['Traversal']);
+foreach my $path (@all_paths) {
+    $csv->print($csv_fh, [$path]);
+}
+close $csv_fh;
+
+print "CSV file '$csv_filename' has been created with the traversal paths.\n";
+
+# Print the paths to the console as well
+foreach my $path (@all_paths) {
+    print "$path\n";
+}
