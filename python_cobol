@@ -1,0 +1,39 @@
+import csv
+
+# Define the tree structure
+tree = {
+    "A": ["B", "C"],
+    "B": ["D", "E"],
+    "C": ["F"],
+    "D": [],
+    "E": ["G"],
+    "F": [],
+    "G": []
+}
+
+# Function to traverse the tree and record paths
+def traverse_tree(node, path, paths):
+    path.append(node)
+    if not tree[node]:  # If the node has no children
+        paths.append(" -> ".join(path))
+    else:
+        for child in tree[node]:
+            traverse_tree(child, path.copy(), paths)
+
+# Record all paths starting from the root
+all_paths = []
+traverse_tree("A", [], all_paths)
+
+# Write the paths to a CSV file
+csv_filename = 'tree_traversal_paths.csv'
+with open(csv_filename, mode='w', newline='') as csv_file:
+    writer = csv.writer(csv_file)
+    writer.writerow(["Traversal"])
+    for path in all_paths:
+        writer.writerow([path])
+
+print(f"CSV file '{csv_filename}' has been created with the traversal paths.")
+
+# Print the paths to the console as well
+for path in all_paths:
+    print(path)
