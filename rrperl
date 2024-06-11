@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# List of servers
+my @servers = ('Server1', 'Server2', 'Server3', 'Server4');
+my $index = 0;
+
+# Function to get the next server using Round Robin
+sub get_next_server {
+    my $server = $servers[$index];
+    $index = ($index + 1) % scalar(@servers);
+    return $server;
+}
+
+# Example usage
+for my $i (1..10) {
+    my $server = get_next_server();
+    print "Request $i sent to: $server\n";
+}
