@@ -1,0 +1,62 @@
+use strict;
+use warnings;
+
+sub is_leap_year {
+    my ($year) = @_;
+    return 0 if $year % 4 != 0;
+    return 1 if $year % 100 != 0;
+    return 0 if $year % 400 != 0;
+    return 1;
+}
+
+sub days_in_month {
+    my ($year, $month) = @_;
+    return 31 if $month == 1 || $month == 3 || $month == 5 || $month == 7 || $month == 8 || $month == 10 || $month == 12;
+    return 30 if $month == 4 || $month == 6 || $month == 9 || $month == 11;
+    return is_leap_year($year) ? 29 : 28 if $month == 2;
+    die "Invalid month: $month";
+}
+
+sub decrement_date {
+    my ($year, $month, $day) = @_;
+    $day--;
+    if ($day == 0) {
+        $month--;
+        if ($month == 0) {
+            $month = 12;
+            $year--;
+        }
+        $day = days_in_month($year, $month);
+    }
+    return ($year, $month, $day);
+}
+
+sub get_dates_descending {
+    my ($start_date, $end_date) = @_;
+    
+    my $start_year = substr($start_date, 0, 4);
+    my $start_month = substr($start_date, 4, 2);
+    my $start_day = substr($start_date, 6, 2);
+    
+    my $end_year = substr($end_date, 0, 4);
+    my $end_month = substr($end_date, 4, 2);
+    my $end_day = substr($end_date, 6, 2);
+    
+    my @dates;
+    my ($year, $month, $day) = ($end_year, $end_month, $end_day);
+    
+    while (1) {
+        push @dates, sprintf("%04d%02d%02d", $year, $month, $day);
+        last if $year == $start_year && $month == $start_month && $day == $start_day;
+        ($year, $month, $day) = decrement_date($year, $month, $day);
+    }
+    
+    return @dates;
+}
+
+my $start_date = '20240101';
+my $end_date = '20240110';
+
+my @dates = get_dates_descending($start_date, $end_date);
+
+print join("\n", @dates), "\n";
