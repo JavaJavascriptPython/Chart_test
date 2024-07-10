@@ -1,0 +1,28 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Getopt::Long;
+
+# Variables to hold command line arguments
+my $file;
+my $help;
+
+# Get command line arguments
+GetOptions(
+    'f=s' => \$file,
+    'h'   => \$help
+) or die "Error in command line arguments\n";
+
+# Display help message if -h is provided
+if ($help) {
+    print "Usage: $0 -f <filename> [-h]\n";
+    exit;
+}
+
+# Check if -f is provided
+unless (defined $file) {
+    die "Usage: $0 -f <filename> [-h]\n";
+}
+
+# Print the filename provided after -f
+print "Filename: $file\n";
