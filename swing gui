@@ -1,0 +1,112 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class FileDownloader extends JFrame {
+
+    private JTextField filenameField;
+    private JTextField filepathField;
+    private JButton downloadButton;
+
+    public FileDownloader() {
+        setTitle("File Downloader");
+        setSize(400, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+
+        JLabel filenameLabel = new JLabel("Filename:");
+        filenameLabel.setBounds(10, 20, 80, 25);
+        panel.add(filenameLabel);
+
+        filenameField = new JTextField(20);
+        filenameField.setBounds(100, 20, 250, 25);
+        panel.add(filenameField);
+
+        JLabel filepathLabel = new JLabel("Filepath:");
+        filepathLabel.setBounds(10, 60, 80, 25);
+        panel.add(filepathLabel);
+
+        filepathField = new JTextField(20);
+        filepathField.setBounds(100, 60, 250, 25);
+        panel.add(filepathField);
+
+        downloadButton = new JButton("Download");
+        downloadButton.setBounds(150, 100, 100, 25);
+        panel.add(downloadButton);
+
+        downloadButton.addActionListener(new DownloadButtonListener());
+
+        add(panel);
+    }
+
+    private class DownloadButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String filename = filenameField.getText();
+            String filepath = filepathField.getText();
+            downloadFile(filename, filepath);
+        }
+    }
+
+    private void downloadFile(String filename, String filepath) {
+        InputStream inputStream = null;
+        FileOutputStream outputStream = null;
+
+        try {
+            URL url = new URL("http://example.com/files/" + filename);  // Replace with your server URL
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                inputStream = connection.getInputStream();
+                Path path = Paths.get(filepath, filename);
+                Files.createDirectories(path.getParent());
+                outputStream = new FileOutputStream(path.toFile());
+
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+
+                JOptionPane.showMessageDialog(this, "File downloaded successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "No file to download. Server replied HTTP code: " + responseCode);
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            FileDownloader downloader = new FileDownloader();
+            downloader.setVisible(true);
+        });
+    }
+}
