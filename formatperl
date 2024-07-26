@@ -1,0 +1,55 @@
+
+
+
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# Data to print
+my $name = "Alice";
+my $age = 30;
+
+# Define the format
+format STDOUT =
+====================================
+Name: @<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+      $name
+Age:  @<<
+      $age
+====================================
+.
+
+# Print the formatted report
+write;
+
+
+
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# Define the format
+format EMPLOYEE =
+====================================
+Name: @<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+      $name
+Age:  @<<
+      $age
+Dept: @<<<<<<<<<<<<<<<<<<<<
+      $dept
+====================================
+.
+
+# Data to print
+my @employees = (
+    { name => "Alice", age => 30, dept => "HR" },
+    { name => "Bob", age => 25, dept => "IT" },
+    { name => "Carol", age => 28, dept => "Finance" }
+);
+
+# Print the formatted report for each employee
+foreach my $emp (@employees) {
+    my ($name, $age, $dept) = ($emp->{name}, $emp->{age}, $emp->{dept});
+    $~ = 'EMPLOYEE';  # Associate the format with the current filehandle
+    write;
+}
