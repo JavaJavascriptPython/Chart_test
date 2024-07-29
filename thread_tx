@@ -1,12 +1,13 @@
-
-
-
 use strict;
 use warnings;
 use threads;
+use Thread::Queue;
+
+# Number of threads in the pool
+my $num_threads = 10;
 
 # List of variables to search for
-my @variables = ('variable1', 'variable2', 'variable3');
+my @variables = ('variable1', 'variable2', 'variable3', ...); # Assume 5000 elements
 
 # Directory containing the files
 my $directory = 'path/to/your/files';
@@ -30,10 +31,20 @@ opendir my $dir, $directory or die "Cannot open directory: $!";
 my @files = map { "$directory/$_" } grep { -f "$directory/$_" } readdir $dir;
 closedir $dir;
 
-# Create threads for each variable
+# Create a queue and add all variables to it
+my $queue = Thread::Queue->new(@variables);
+
+# Worker thread subroutine
+sub worker {
+    while (defined(my $variable = $queue->dequeue())) {
+        grep_variable_in_files($variable, \@files);
+    }
+}
+
+# Create worker threads
 my @threads;
-foreach my $variable (@variables) {
-    push @threads, threads->create(\&grep_variable_in_files, $variable, \@files);
+for (1..$num_threads) {
+    push @threads, threads->create(\&worker);
 }
 
 # Join all threads
