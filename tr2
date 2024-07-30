@@ -1,0 +1,28 @@
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+public class ReadTRCFile {
+    public static void main(String[] args) {
+        String fileName = "path/to/your/file.trc";
+        try (FileInputStream fis = new FileInputStream(fileName)) {
+            // Read the first 4 bytes (example header)
+            byte[] headerBuffer = new byte[4];
+            if (fis.read(headerBuffer) != -1) {
+                int headerValue = ByteBuffer.wrap(headerBuffer).getInt();
+                System.out.println("Header Value: " + headerValue);
+            }
+
+            // Read the next 8 bytes as two integers
+            byte[] buffer = new byte[8];
+            while (fis.read(buffer) != -1) {
+                ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
+                int value1 = byteBuffer.getInt();
+                int value2 = byteBuffer.getInt();
+                System.out.println("Value1: " + value1 + ", Value2: " + value2);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
