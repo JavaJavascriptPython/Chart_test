@@ -1,0 +1,20 @@
+import java.io.FileInputStream;
+import java.io.IOException;
+
+public class ReadTRCFile {
+    public static void main(String[] args) {
+        String fileName = "file.trc";
+        try (FileInputStream fis = new FileInputStream(fileName)) {
+            byte[] buffer = new byte[4];  // Example: read 4 bytes at a time
+            while (fis.read(buffer) != -1) {
+                // Process buffer here
+                for (byte b : buffer) {
+                    System.out.print(b + " ");
+                }
+                System.out.println();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
