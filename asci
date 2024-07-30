@@ -1,0 +1,26 @@
+import java.io.FileInputStream;
+import java.io.IOException;
+
+public class BinaryFileToAscii {
+    public static void main(String[] args) {
+        try {
+            String asciiString = binaryFileToAscii("path/to/your/file.bin");
+            System.out.println(asciiString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String binaryFileToAscii(String filePath) throws IOException {
+        FileInputStream fis = new FileInputStream(filePath);
+        StringBuilder asciiString = new StringBuilder();
+        int byteValue;
+
+        while ((byteValue = fis.read()) != -1) {
+            asciiString.append((char) byteValue);
+        }
+
+        fis.close();
+        return asciiString.toString();
+    }
+}
