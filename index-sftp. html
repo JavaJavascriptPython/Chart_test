@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Transfer</title>
+</head>
+<body>
+    <h1>File Transfer</h1>
+    <form id="fileForm">
+        <label for="filename">Complete Filename with Path:</label><br>
+        <input type="text" id="filename" name="filename"><br><br>
+        
+        <label for="dropLocation">Drop Location Path:</label><br>
+        <input type="text" id="dropLocation" name="dropLocation"><br><br>
+
+        <input type="button" value="Submit" onclick="submitForm()">
+    </form>
+
+    <p id="result"></p>
+
+    <script>
+        function submitForm() {
+            const filename = document.getElementById('filename').value;
+            const dropLocation = document.getElementById('dropLocation').value;
+
+            fetch('/transfer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ filename, dropLocation }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').textContent = data.message;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
