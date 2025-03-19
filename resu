@@ -1,0 +1,60 @@
+Professional Summary
+Backend Developer with 2 years of experience in Core Banking Solutions, specializing in Python-based software development and automation. Played a key role in the design, development, and optimization of distribution software for India’s largest bank, supporting 25,000+ online and physical branches across the country.
+Key Responsibilities & Achievements:
+Designed and developed scalable backend solutions for secure data distribution between bank branches and central databases.
+Automated 40% of manual workflows using Python and Shell scripting, significantly improving operational efficiency and monitoring.
+Developed, tested, and deployed automation scripts to streamline processes across multiple teams.
+Managed the complete SDLC, including requirement analysis, coding, testing, debugging, and production deployment (SOD, EOD).
+Provided production support, client support, and issue resolution, ensuring system stability and smooth operations.
+Enhanced business continuity planning (BCP) by optimizing data distribution strategies for increased reliability and performance.
+Worked on multiple software development projects, including secure file transfer systems (Secutransfer) and other Python-based applications.
+Leveraged Python libraries for encryption, automation, and efficient data handling, improving security and processing speed.
+
+
+Professional Summary
+Python Backend Developer with 2 years of experience in Core Banking Solutions, specializing in backend development, automation, and secure data distribution. Contributed to the design, development, and optimization of mission-critical banking software for India’s largest bank, supporting 25,000+ online and physical branches nationwide. Experienced in Python, FastAPI, Flask, PostgreSQL, and automation scripting, with a strong focus on performance, security, and scalability.
+Key Responsibilities & Achievements:
+Designed and developed scalable backend solutions for secure data distribution between bank branches and central databases.
+Automated 40% of manual workflows using Python (Pandas, Paramiko, Multiprocessing) and Shell scripting, reducing operational overhead and improving monitoring.
+Developed RESTful APIs using FastAPI/Flask for seamless communication between banking services and external systems.
+Built and optimized high-performance data pipelines for handling large transaction volumes efficiently.
+Managed the complete SDLC, including requirement analysis, coding, testing, debugging, and deployment (SOD, EOD).
+Provided production support, client support, and real-time issue resolution, ensuring system stability and uptime.
+Implemented business continuity planning (BCP) strategies to optimize data distribution and disaster recovery.
+Worked on multiple software development projects, including secure file transfer systems (Secutransfer) and automation tools for banking operations.
+Integrated PostgreSQL and MySQL databases, optimizing queries for faster transaction processing and reporting.
+Leveraged Python libraries (FastAPI, Flask, Pandas, Paramiko, SQLAlchemy) to enhance application performance, security, and scalability.
+
+
+
+
+
+Secutransfer – Secure File Transfer and Processing System
+Technologies: Python, AES (GCM/CBC), hashlib (MD5, SHA256), Paramiko (SFTP), 
+Multithreading, Logging, ConfigParser
+• Developed a high-performance Python-based middleware application for secure and 
+automated file transfers in a banking environment.
+• Designed a rule-based processing engine that dynamically applies AES encryption 
+(GCM/CBC), hash verification (MD5/SHA256), or both, based on predefined 
+configurations.
+• Utilized multithreading to efficiently handle large-scale concurrent file transfers, 
+ensuring minimal processing delays.
+• Integrated Paramiko (SFTP) for secure and reliable file transmission to the production 
+server.
+• Implemented a configurable logging and monitoring system to track file processing, 
+errors, and security events.
+• Used ConfigParser for dynamic rule management, allowing easy updates to encryption and 
+transfer policies without modifying the core codebase.
+• Optimized performance through efficient file I/O operations, reducing processing time for 
+large file batches.
+Secutransfer – Secure File Transfer and Processing Application
+Technologies: Python, AES (GCM/CBC), MD5, SHA256, SFTP
+• Developed a robust Python-based application for secure file transfer in a banking 
+environment.
+• Designed to operate as an intermediary between branch/department servers and the 
+production server.
+• Implemented AES encryption (GCM/CBC) and hash verification (MD5/SHA256) for secure
+file processing.
+• Dynamically determines processing steps based on predefined rules for different file types.
+• Efficiently handles high-volume file transfers with minimal latency.
+• Integrated SFTP for seamless and secure transmission to the production server.
