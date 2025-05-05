@@ -1,0 +1,48 @@
+use strict;
+use warnings;
+use threads;
+use Thread::Queue;
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+
+# Create 12 queues (1 per worker)
+my @queues = map { Thread::Queue->new() } 1..12;
+my @threads;
+
+# Dummy logic functions (you should replace these)
+sub func1  { my ($line, $h) = @_; $h->{$line}++ }
+sub func2  { my ($line, $h) = @_; $h->{$line} += 2 }
+# ... up to func12
+
+my @functions = (\&func1, \&func2, \&func1, \&func2, \&func1, \&func2, \&func1, \&func2, \&func1, \&func2, \&func1, \&func2);
+
+# Spawn 12 threads
+for my $i (0..11) {
+    my $queue = $queues[$i];
+    my $func = $functions[$i];
+    push @threads, threads->create(sub {
+        my %hash;
+        while (my $line = $queue->dequeue) {
+            last if $line eq '__END__';
+            $func->($line, \%hash);
+        }
+        # Output hash to file
+        open my $fh, ">", "output_$i.txt" or die $!;
+        print $fh "$_ => $hash{$_}\n" for keys %hash;
+        close $fh;
+    });
+}
+
+# Reader thread: reads gzip file line by line and sends to all 12 queues
+my $gz = IO::Uncompress::Gunzip->new("data.gz")
+    or die "Cannot open .gz file: $GunzipError\n";
+
+while (my $line = <$gz>) {
+    chomp $line;
+    $_->enqueue($line) for @queues;
+}
+
+# Signal end of data to all queues
+$_->enqueue('__END__') for @queues;
+
+# Wait for all worker threads to finish
+$_->join for @threads;
