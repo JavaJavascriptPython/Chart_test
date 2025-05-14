@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-
 # Open the input file for reading
 my $input_file = 'file_paths.txt'; # replace with your actual file name
 open(my $fh, '<', $input_file) or die "Cannot open file $input_file: $!";
