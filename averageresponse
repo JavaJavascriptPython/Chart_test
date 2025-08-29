@@ -1,0 +1,71 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use POSIX qw(strftime mktime);
+
+# --- CONFIGURATION ---
+my $input_file  = "input.txt";    # file containing transaction numbers (one per line)
+my $output_file = "summary.csv";  # output CSV file
+my $data_dir    = "./data";       # directory where daily txnresponse files are stored
+my $file_prefix = "txnresponse_"; # prefix of daily files
+my $file_suffix = ".txt";         # suffix of daily files
+my $date_format = "%Y%m%d";       # file date format in filenames (e.g., txnresponse_20250101.txt)
+
+# --- DATE RANGE (provide via args or hardcode) ---
+my $start_date = "20250101";  # YYYYMMDD
+my $end_date   = "20250105";
+
+# --- Load transaction numbers into hash ---
+my %txn_summary;
+open my $in, "<", $input_file or die "Cannot open $input_file: $!";
+while (my $txn = <$in>) {
+    chomp $txn;
+    next unless $txn;
+    $txn_summary{$txn} = [0, 0];  # [ total_count, days_hit ]
+}
+close $in;
+
+# --- Function to get next date ---
+sub next_date {
+    my ($date) = @_;
+    my ($y, $m, $d) = $date =~ /(\d{4})(\d{2})(\d{2})/;
+    my $time = POSIX::mktime(0,0,0,$d,$m-1,$y-1900);
+    $time += 24*60*60;
+    return strftime("%Y%m%d", localtime($time));
+}
+
+# --- Iterate through date range ---
+my $date = $start_date;
+while ($date le $end_date) {
+    my $file = "$data_dir/$file_prefix$date$file_suffix";
+    if (-e $file) {
+        my %seen_today;
+        open my $fh, "<", $file or die "Cannot open $file: $!";
+        while (my $line = <$fh>) {
+            chomp $line;
+            my ($txn, undef, undef, undef, $count) = split /\s+/, $line;
+            if (exists $txn_summary{$txn}) {
+                $txn_summary{$txn}[0] += $count;
+                $seen_today{$txn} = 1;
+            }
+        }
+        close $fh;
+
+        # increment days_hit for seen transactions
+        for my $txn (keys %seen_today) {
+            $txn_summary{$txn}[1]++;
+        }
+    }
+    $date = next_date($date);
+}
+
+# --- Write output CSV manually ---
+open my $out, ">", $output_file or die "Cannot open $output_file: $!";
+print $out "Transaction_Number,Total_Count,Days_Hit\n";
+for my $txn (sort keys %txn_summary) {
+    my ($total, $days) = @{$txn_summary{$txn}};
+    print $out join(",", $txn, $total, $days), "\n";
+}
+close $out;
+
+print "Summary written to $output_file\n";
